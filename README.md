@@ -9,11 +9,16 @@ Docker GUI's main goal is to give a user friendly display of everything that is 
 ## How?
 Docker GUI is a Node app built with React, Refetch, Dockerode, and a basic Express server.
 
+## UI Concept
+
+![Concept](public/images/ComponentConcept.png)
+
+## Screenshots (WIP)
+
+![Screenshot](public/images/ScreenShot2016-08-13-10.53.33AM.png)
+
+
 ## Known Issues
 
 * Docker pull doesn't work as expected
 * Running containers in detached mode is not possible unless the container has an entrypoint
-
-# Screenshots
-
-![Screenshot](public/images/ScreenShot2016-08-13-10.53.33AM.png)
