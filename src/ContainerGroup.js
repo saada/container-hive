@@ -1,13 +1,17 @@
 import React, { Component } from 'react'
 import './ContainerGroup.css'
-import Container from './Container.js'
+import Container from './Container'
 
 class ContainerGroup extends Component {
+  getContainers () {
+    return this.props.containers.map(container => <Container key={Math.random()} container={container} />)
+  }
+
   render () {
     return (
       <div>
         <div className="ContainerGroup">
-          {this.props.containers.map(container => <Container key={Math.random()} cid={container.Id.slice(0, 5)} />)}
+          {this.getContainers()}
         </div>
         {this.props.name} - {this.props.count}
       </div>
