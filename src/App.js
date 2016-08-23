@@ -1,25 +1,29 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
+import { connect, PromiseState } from 'react-refetch'
 import logo from './logo.svg'
 import './App.css'
 import ContainerList from './ContainerList'
-import { connect } from 'react-refetch'
+import Graph from './Graph'
+import Spinner from './Spinner'
 
 class App extends Component {
   constructor () {
     super()
     this.getContainers = this.getContainers.bind(this)
-    this.getDemo = this.getDemo.bind(this)
+    this.getSelectedImage = this.getSelectedImage.bind(this)
+    this.runContainer = this.runContainer.bind(this)
   }
   groupByNetworks (containers) {
   }
 
   runContainer (image) {
+    this.props.demoFetch(this.getSelectedImage())
   }
 
   getContainers () {
     const fetch = this.props.psFetch
     if (fetch.pending) {
-      return <img alt="loading..." src="http://localhost:8000/images/squares.gif" />
+      return <Spinner width={100} />
     } else if (fetch.rejected) {
       return <p>Error: {fetch.reason}</p>
     } else if (fetch.fulfilled) {
@@ -27,17 +31,20 @@ class App extends Component {
     }
   }
 
-  getDemo () {
-    const image = this.refs.selectedImage.value
-    this.props.demoFetch(image)
-    console.log(this.props)
-    const fetch = this.props.demoFetch
-    if (fetch.pending) {
-      return <p>Creating new redis container...</p>
-    } else if (fetch.rejected) {
-      return <p>Error: {fetch.reason}</p>
-    } else if (fetch.fulfilled) {
-      return <p>{fetch.value.message} - redis container created!</p>
+  getSelectedImage () {
+    return this.refs.selectedImage.value
+  }
+
+  getStatus () {
+    if (this.props.demoFetchResponse) {
+      const fetch = this.props.demoFetchResponse
+      if (fetch.pending) {
+        return <p>Pulling and creating new {this.getSelectedImage()} container...</p>
+      } else if (fetch.rejected) {
+        return <p>Error: {fetch.reason}</p>
+      } else if (fetch.fulfilled) {
+        return <p>{fetch.value.message} - redis container created!</p>
+      }
     }
   }
 
@@ -53,15 +60,18 @@ class App extends Component {
           <option>library/redis</option>
           <option>library/nginx</option>
         </select>
-        <button onClick={this.getDemo}>Add Container</button>
+        <button onClick={this.runContainer}>Add Container</button>
+        {this.getStatus()}
+        <Graph />
       </div>
     )
   }
 }
 
 App.propTypes = {
-  psFetch: React.PropTypes.object,
-  demoFetch: React.PropTypes.func
+  psFetch: PropTypes.object,
+  demoFetch: PropTypes.func,
+  demoFetchResponse: PropTypes.instanceOf(PromiseState)
 }
 
 const URL_PS = 'http://localhost:8000/ps'
@@ -70,7 +80,7 @@ const URL_DEMO = 'http://localhost:8000/demo'
 export default connect(props => ({
   psFetch: {url: URL_PS, refreshInterval: 5000},
   demoFetch: (image) => ({
-    startDemo: {
+    demoFetchResponse: {
       url: URL_DEMO,
       method: 'POST',
       body: JSON.stringify({ image }),

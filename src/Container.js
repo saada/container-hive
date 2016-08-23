@@ -1,6 +1,7 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import './Container.css'
-import { connect } from 'react-refetch'
+import Spinner from './Spinner'
+import { connect, PromiseState } from 'react-refetch'
 
 class Container extends Component {
   constructor () {
@@ -11,6 +12,14 @@ class Container extends Component {
     this.props.killContainer(this.props.container.Id)
   }
   render () {
+    if (this.props.killResponse) {
+      if (this.props.killResponse.pending) {
+        return <Spinner />
+      } else if (this.props.killResponse.fulfilled) {
+        return null
+      }
+    }
+
     return (
       <div className="Container">
         {this.props.container.Id.slice(0, 5)}
@@ -21,13 +30,14 @@ class Container extends Component {
 }
 
 Container.propTypes = {
-  container: React.PropTypes.object,
-  killContainer: React.PropTypes.func
+  container: PropTypes.object,
+  killContainer: PropTypes.func,
+  killResponse: PropTypes.instanceOf(PromiseState)
 }
 
 export default connect(props => ({
   killContainer: (id) => ({
-    startDemo: {
+    killResponse: {
       url: 'http://localhost:8000/kill',
       method: 'POST',
       body: JSON.stringify({ id }),
