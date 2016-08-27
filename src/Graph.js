@@ -1,46 +1,69 @@
 import React, { Component } from 'react'
 import cytoscape from 'cytoscape'
+import './Graph.css'
 
 class Graph extends Component {
   componentDidMount () {
-    console.log('did mount', this.refs.graph)
+    console.log('setting up cytoscape...', this.refs.graph)
     cytoscape({
       container: this.refs.graph,
-      elements: [ // list of graph elements to start with
-        { // node a
-          data: { id: 'a' }
+      elements: [
+        // nodes
+        { data: { id: 'a' } },
+        { data: { id: 'b' } },
+        { data: { id: 'c' } },
+        { data: { id: 'd' } },
+        { data: { id: 'e' } },
+        { data: { id: 'f' } },
+        // edges
+        {
+          data: {
+            id: 'ab',
+            source: 'a',
+            target: 'b'
+          }
         },
-        { // node b
-          data: { id: 'b' }
+        {
+          data: {
+            id: 'cd',
+            source: 'c',
+            target: 'd'
+          }
         },
-        { // edge ab
-          data: { id: 'ab', source: 'a', target: 'b' }
+        {
+          data: {
+            id: 'ef',
+            source: 'e',
+            target: 'f'
+          }
+        },
+        {
+          data: {
+            id: 'ac',
+            source: 'a',
+            target: 'd'
+          }
+        },
+        {
+          data: {
+            id: 'be',
+            source: 'b',
+            target: 'e'
+          }
         }
       ],
-
-      style: [ // the stylesheet for the graph
+      style: [
         {
           selector: 'node',
           style: {
-            'background-color': '#666',
-            'label': 'data(id)'
-          }
-        },
-
-        {
-          selector: 'edge',
-          style: {
-            'width': 3,
-            'line-color': '#ccc',
-            'target-arrow-color': '#ccc',
-            'target-arrow-shape': 'triangle'
+            shape: 'hexagon',
+            'background-color': 'red',
+            label: 'data(id)'
           }
         }
       ],
-
       layout: {
-        name: 'grid',
-        rows: 1
+        name: 'grid'
       }
     })
   }
@@ -54,11 +77,7 @@ class Graph extends Component {
   }
 
   render () {
-    return (
-      <div ref="graph" className="Graph">
-        GRAPH
-      </div>
-    )
+    return <div ref="graph" className="Graph" />
   }
 }
 
