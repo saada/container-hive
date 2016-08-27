@@ -17,7 +17,7 @@ class App extends Component {
   }
 
   runContainer (image) {
-    this.props.demoFetch(this.getSelectedImage())
+    this.props.runFetch(this.getSelectedImage())
   }
 
   getContainers () {
@@ -36,8 +36,8 @@ class App extends Component {
   }
 
   getStatus () {
-    if (this.props.demoFetchResponse) {
-      const fetch = this.props.demoFetchResponse
+    if (this.props.runFetchResponse) {
+      const fetch = this.props.runFetchResponse
       if (fetch.pending) {
         return <p>Pulling and creating new {this.getSelectedImage()} container...</p>
       } else if (fetch.rejected) {
@@ -70,18 +70,18 @@ class App extends Component {
 
 App.propTypes = {
   psFetch: PropTypes.object,
-  demoFetch: PropTypes.func,
-  demoFetchResponse: PropTypes.instanceOf(PromiseState)
+  runFetch: PropTypes.func,
+  runFetchResponse: PropTypes.instanceOf(PromiseState)
 }
 
 const URL_PS = 'http://localhost:8000/ps'
-const URL_DEMO = 'http://localhost:8000/demo'
+const URL_RUN = 'http://localhost:8000/run'
 
 export default connect(props => ({
   psFetch: {url: URL_PS, refreshInterval: 5000},
-  demoFetch: (image) => ({
-    demoFetchResponse: {
-      url: URL_DEMO,
+  runFetch: (image) => ({
+    runFetchResponse: {
+      url: URL_RUN,
       method: 'POST',
       body: JSON.stringify({ image }),
       force: true,
