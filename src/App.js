@@ -12,8 +12,16 @@ class App extends Component {
     this.getContainers = this.getContainers.bind(this)
     this.getSelectedImage = this.getSelectedImage.bind(this)
     this.runContainer = this.runContainer.bind(this)
+    this.state = {
+      err: null
+    }
   }
-  groupByNetworks (containers) {
+
+  componentWillReceiveProps (nextProps) {
+    nextProps.psFetch.catch(err => {
+      console.log(err)
+      this.setState({err: 'Server is down! Make sure Docker is running and try starting the server with `npm run start-server`.'})
+    })
   }
 
   runContainer (image) {
@@ -48,7 +56,23 @@ class App extends Component {
     }
   }
 
+  renderError () {
+    return (
+      <div className="App">
+        <div className="App-header">
+          <img src={logo} className="App-logo" alt="logo" />
+          <h2>Docker GUI</h2>
+        </div>
+        <h2 style={{color: 'red'}}>{this.state.err}</h2>
+      </div>
+    )
+  }
+
   render () {
+    if (this.state.err) {
+      return this.renderError()
+    }
+
     return (
       <div className="App">
         <div className="App-header">
