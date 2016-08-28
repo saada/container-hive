@@ -12,8 +12,10 @@
   },
   "dependencies": {
     "body-parser": "^1.15.2",
+    "cola": "^0.1.7",
     "cors": "^2.7.1",
     "cytoscape": "^2.7.7",
+    "cytoscape-cola": "^1.4.1",
     "dockerode": "^2.3.0",
     "express": "^4.14.0",
     "react": "^15.2.1",

@@ -1,87 +1,52 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import cytoscape from 'cytoscape'
+import cycola from 'cytoscape-cola'
+import cola from 'cola'
+cycola(cytoscape, cola) // register extension
 import './Graph.css'
 
 class Graph extends Component {
+  constructor () {
+    super()
+    this.state = {
+      cy: null
+    }
+  }
+
   componentDidMount () {
     console.log('setting up cytoscape...', this.refs.graph)
-    cytoscape({
-      container: this.refs.graph,
-      elements: [
-        // nodes
-        { data: { id: 'a' } },
-        { data: { id: 'b' } },
-        { data: { id: 'c' } },
-        { data: { id: 'd' } },
-        { data: { id: 'e' } },
-        { data: { id: 'f' } },
-        // edges
-        {
-          data: {
-            id: 'ab',
-            source: 'a',
-            target: 'b'
+    this.setState({
+      cy: cytoscape({
+        container: this.refs.graph,
+        elements: [],
+        style: [
+          {
+            selector: 'node',
+            style: {
+              shape: 'rectangle',
+              'background-color': 'black',
+              label: 'data(id)'
+            }
           }
-        },
-        {
-          data: {
-            id: 'cd',
-            source: 'c',
-            target: 'd'
-          }
-        },
-        {
-          data: {
-            id: 'ef',
-            source: 'e',
-            target: 'f'
-          }
-        },
-        {
-          data: {
-            id: 'ac',
-            source: 'a',
-            target: 'd'
-          }
-        },
-        {
-          data: {
-            id: 'be',
-            source: 'b',
-            target: 'e'
-          }
+        ],
+        layout: {
+          name: 'grid'
         }
-      ],
-      style: [
-        {
-          selector: 'node',
-          style: {
-            shape: 'hexagon',
-            'background-color': 'red',
-            label: 'data(id)'
-          }
-        }
-      ],
-      layout: {
-        name: 'grid'
-      }
+      })
     })
   }
 
-  componentWillMount () {
-    console.log('will mount')
-  }
-
-  componentWillUnmount () {
-    console.log('will unmount')
-  }
-
   render () {
+    console.log('rerender graph...')
+    if (this.props.elements) {
+      this.state.cy.add(this.props.elements)
+    }
     return <div ref="graph" className="Graph" />
   }
 }
 
 Graph.propTypes = {
+  elements: PropTypes.array
 }
 
 export default Graph

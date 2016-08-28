@@ -56,6 +56,66 @@ class App extends Component {
     }
   }
 
+  getElements () {
+    if (!this.props.psFetch.value) {
+      return null
+    }
+
+    return this.props.psFetch.value.map(container => {
+      return {
+        data: {
+          id: container.Id.slice(0, 5)
+        }
+      }
+    })
+
+    // return [
+    //   // nodes
+    //   { data: { id: 'a' } },
+    //   { data: { id: 'b' } },
+    //   { data: { id: 'c' } },
+    //   { data: { id: 'd' } },
+    //   { data: { id: 'e' } },
+    //   { data: { id: 'f' } },
+    //   // edges
+    //   {
+    //     data: {
+    //       id: 'ab',
+    //       source: 'a',
+    //       target: 'b'
+    //     }
+    //   },
+    //   {
+    //     data: {
+    //       id: 'cd',
+    //       source: 'c',
+    //       target: 'd'
+    //     }
+    //   },
+    //   {
+    //     data: {
+    //       id: 'ef',
+    //       source: 'e',
+    //       target: 'f'
+    //     }
+    //   },
+    //   {
+    //     data: {
+    //       id: 'ac',
+    //       source: 'a',
+    //       target: 'd'
+    //     }
+    //   },
+    //   {
+    //     data: {
+    //       id: 'be',
+    //       source: 'b',
+    //       target: 'e'
+    //     }
+    //   }
+    // ]
+  }
+
   renderError () {
     return (
       <div className="App">
@@ -74,19 +134,21 @@ class App extends Component {
     }
 
     return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Docker GUI</h2>
+      <div>
+        <div className="App">
+          <div className="App-header">
+            <img src={logo} className="App-logo" alt="logo" />
+            <h2>Docker GUI</h2>
+          </div>
+          {this.getContainers()}
+          <select ref="selectedImage">
+            <option>library/redis</option>
+            <option>library/nginx</option>
+          </select>
+          <button onClick={this.runContainer}>Add Container</button>
+          {this.getStatus()}
         </div>
-        {this.getContainers()}
-        <select ref="selectedImage">
-          <option>library/redis</option>
-          <option>library/nginx</option>
-        </select>
-        <button onClick={this.runContainer}>Add Container</button>
-        {this.getStatus()}
-        <Graph />
+        <Graph elements={this.getElements()} />
       </div>
     )
   }
