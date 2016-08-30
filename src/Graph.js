@@ -39,6 +39,13 @@ class Graph extends Component {
   render () {
     console.log('rerender graph...')
     if (this.props.elements) {
+      this.state.cy.nodes().forEach(node => {
+        if (!this.props.elements.includes({data: {id: node.id()}})) {
+          console.log(node.id())
+          this.state.cy.remove(`#${node.id()}`)
+        }
+      })
+      console.log(this.state.cy.nodes(), this.props.elements)
       this.state.cy.add(this.props.elements)
     }
     return <div ref="graph" className="Graph" />
