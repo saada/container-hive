@@ -1,8 +1,13 @@
 import React, { Component, PropTypes } from 'react'
+
 import cytoscape from 'cytoscape'
+import jquery from 'jquery'
+import contextMenus from 'cytoscape-context-menus'
+contextMenus(cytoscape, jquery)
+
 import cycola from 'cytoscape-cola'
 import cola from 'cola'
-cycola(cytoscape, cola) // register extension
+cycola(cytoscape, cola)
 import './Graph.css'
 
 class Graph extends Component {
@@ -23,29 +28,35 @@ class Graph extends Component {
           {
             selector: 'node',
             style: {
-              shape: 'rectangle',
-              'background-color': 'black',
+              shape: 'hexagon',
+              'background-color': 'blue',
               label: 'data(id)'
             }
           }
         ],
         layout: {
-          name: 'grid'
+          name: 'grid',
+          fit: true,
+          padding: 30,
         }
       })
     })
   }
 
+  removeOldContainers () {
+    this.state.cy.nodes().forEach(node => {
+      const containers = this.props.elements.filter(el => el.data.id === node.id())
+      const containerRunning = containers.length
+      if (!containerRunning) {
+        const nodeToRemove = `#${node.id()}`
+        this.state.cy.remove(nodeToRemove)
+      }
+    })
+  }
+
   render () {
-    console.log('rerender graph...')
     if (this.props.elements) {
-      this.state.cy.nodes().forEach(node => {
-        if (!this.props.elements.includes({data: {id: node.id()}})) {
-          console.log(node.id())
-          this.state.cy.remove(`#${node.id()}`)
-        }
-      })
-      console.log(this.state.cy.nodes(), this.props.elements)
+      this.removeOldContainers()
       this.state.cy.add(this.props.elements)
     }
     return <div ref="graph" className="Graph" />

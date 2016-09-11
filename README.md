@@ -3,7 +3,7 @@
 ![Screenshot](public/images/squares.gif)
 
 ## Why? 
-Visualization helps provides intuition and understanding.
+Visualization helps provides intuition and understanding of even the most complex systems.
 ## What? 
 Docker GUI's main goal is to give a user friendly display of everything that is running in your Docker daemon and, in the future, provide powerful CRUD capabilities. 
 ## How?
@@ -22,3 +22,13 @@ Docker GUI is a Node app built with React, Refetch, Dockerode, and a basic Expre
 
 * Docker pull doesn't work as expected
 * Running containers in detached mode is not possible unless the container has an entrypoint
+
+## Contibuting
+
+```bash
+# Start React App with Hot Reloading
+npm run start
+
+# Start Backend App
+npm run start-server
+```
