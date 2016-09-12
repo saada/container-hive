@@ -24,6 +24,8 @@ class Graph extends Component {
       cy: cytoscape({
         container: this.refs.graph,
         elements: [],
+        zoom: 1,
+        pan: { x: 0, y: 0 },
         style: [
           {
             selector: 'node',
@@ -35,9 +37,7 @@ class Graph extends Component {
           }
         ],
         layout: {
-          name: 'grid',
-          fit: true,
-          padding: 30,
+          name: 'random'
         }
       })
     })

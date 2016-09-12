@@ -20,7 +20,6 @@ Docker GUI is a Node app built with React, Refetch, Dockerode, and a basic Expre
 
 ## Known Issues
 
-* Docker pull doesn't work as expected
 * Running containers in detached mode is not possible unless the container has an entrypoint
 
 ## Contibuting
@@ -32,3 +31,5 @@ npm run start
 # Start Backend App
 npm run start-server
 ```
+
+Pull Requests are welcomed and encouraged!
