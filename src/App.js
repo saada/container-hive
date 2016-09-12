@@ -3,7 +3,7 @@ import { connect, PromiseState } from 'react-refetch'
 import logo from './logo.svg'
 import './App.css'
 import ContainerList from './ContainerList'
-import Graph from './Graph'
+import Hive from './Hive'
 import Spinner from './Spinner'
 
 class App extends Component {
@@ -68,52 +68,6 @@ class App extends Component {
         }
       }
     })
-
-    // return [
-    //   // nodes
-    //   { data: { id: 'a' } },
-    //   { data: { id: 'b' } },
-    //   { data: { id: 'c' } },
-    //   { data: { id: 'd' } },
-    //   { data: { id: 'e' } },
-    //   { data: { id: 'f' } },
-    //   // edges
-    //   {
-    //     data: {
-    //       id: 'ab',
-    //       source: 'a',
-    //       target: 'b'
-    //     }
-    //   },
-    //   {
-    //     data: {
-    //       id: 'cd',
-    //       source: 'c',
-    //       target: 'd'
-    //     }
-    //   },
-    //   {
-    //     data: {
-    //       id: 'ef',
-    //       source: 'e',
-    //       target: 'f'
-    //     }
-    //   },
-    //   {
-    //     data: {
-    //       id: 'ac',
-    //       source: 'a',
-    //       target: 'd'
-    //     }
-    //   },
-    //   {
-    //     data: {
-    //       id: 'be',
-    //       source: 'b',
-    //       target: 'e'
-    //     }
-    //   }
-    // ]
   }
 
   renderError () {
@@ -148,7 +102,20 @@ class App extends Component {
           <button onClick={this.runContainer}>Add Container</button>
           {this.getStatus()}
         </div>
-        <Graph elements={this.getElements()} />
+        <Hive containers={
+          [
+            {Id: 1, Image: 'apple'},
+            {Id: 2, Image: 'orange'},
+            {Id: 3, Image: 'carrot'},
+            {Id: 4, Image: 'bee'},
+            {Id: 5, Image: 'bee'},
+            {Id: 6, Image: 'honey'},
+            {Id: 7, Image: 'honey'},
+            {Id: 8, Image: 'honey'},
+            {Id: 9, Image: 'queen'}
+          ]
+        } />
+        <Hive containers={null /*this.props.psFetch.value*/} />
       </div>
     )
   }
