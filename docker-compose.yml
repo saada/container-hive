@@ -1,0 +1,10 @@
+version: '2'
+services:
+  nginx:
+    image: nginx
+    ports:
+      - "80:80"
+
+  curl:
+    image: appropriate/curl
+    command: sh -c 'while true; do curl nginx; sleep 2; done'

@@ -3,7 +3,10 @@
 ![Screenshot](public/images/squares.gif)
 
 ## Why? 
-Visualization helps provides intuition and understanding of even the most complex systems.
+Visualization helps provides intuition and understanding. This project tries to answer the question
+
+    What am I running on my environment?
+
 ## What? 
 Docker GUI's main goal is to give a user friendly display of everything that is running in your Docker daemon and, in the future, provide powerful CRUD capabilities. 
 ## How?

@@ -5,4 +5,9 @@
 .hex {
   color: #6C6;
   font-size: 135px;
+  /*margin: 0 -11px;*/
+}
+
+.cell-text {
+  bottom: -20px;
 }
