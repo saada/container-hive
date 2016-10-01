@@ -1,5 +1,5 @@
 {
-  "name": "docker-gui",
+  "name": "docker-hive",
   "version": "0.0.1",
   "private": true,
   "devDependencies": {
@@ -14,12 +14,8 @@
     "body-parser": "^1.15.2",
     "cola": "^0.1.7",
     "cors": "^2.7.1",
-    "cytoscape": "^2.7.7",
-    "cytoscape-cola": "^1.4.1",
-    "cytoscape-context-menus": "^2.0.3",
     "dockerode": "^2.3.0",
     "express": "^4.14.0",
-    "jquery": "^3.1.0",
     "react": "^15.2.1",
     "react-dom": "^15.2.1",
     "react-refetch": "^1.0.0-beta.8"
