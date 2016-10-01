@@ -1,13 +1,15 @@
 .Cell {
-
+  text-align: center;
+  color: white;  
 }
 
 .hex {
   color: #6C6;
   font-size: 135px;
-  /*margin: 0 -11px;*/
+  margin-bottom: -109px;
 }
 
-.cell-text {
-  bottom: -20px;
+.placeholder {
+  color: #222;
+  text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
 }

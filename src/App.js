@@ -92,7 +92,7 @@ class App extends Component {
         <div className="App">
           <div className="App-header">
             <img src={logo} className="App-logo" alt="logo" />
-            <h2>Docker GUI</h2>
+            <h2>Docker Hive</h2>
           </div>
           {this.getContainers()}
           <select ref="selectedImage">
@@ -115,7 +115,6 @@ class App extends Component {
             {Id: 9, Image: 'queen'}
           ]
         } />
-        <Hive containers={null /*this.props.psFetch.value*/} />
       </div>
     )
   }
