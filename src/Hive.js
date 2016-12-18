@@ -1,15 +1,8 @@
 import React, { Component, PropTypes } from 'react'
-import { HexGrid } from 'react-hexgrid'
 import './Hive.css'
 import Cell from './Cell'
 
 class Hive extends Component {
-  constructor (props) {
-    super(props)
-    const grid = HexGrid.generate(config)
-    this.grid = grid
-  }
-
   getCells () {
     if (!this.props.containers) {
       return null
