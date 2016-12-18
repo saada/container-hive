@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { connect, PromiseState } from 'react-refetch'
+import Websocket from 'react-websocket'
 import logo from './logo.svg'
 import './App.css'
 import ContainerList from './ContainerList'
@@ -70,11 +71,15 @@ class App extends Component {
     })
   }
 
+  handleData (data) {
+    console.log('ws data - ', data)
+  }
+
   renderError () {
     return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
+      <div className='App'>
+        <div className='App-header'>
+          <img src={logo} className='App-logo' alt='logo' />
           <h2>Docker GUI</h2>
         </div>
         <h2 style={{color: 'red'}}>{this.state.err}</h2>
@@ -89,13 +94,14 @@ class App extends Component {
 
     return (
       <div>
-        <div className="App">
-          <div className="App-header">
-            <img src={logo} className="App-logo" alt="logo" />
+        <Websocket url='ws://localhost:8000/' onMessage={this.handleData.bind(this)} />
+        <div className='App'>
+          <div className='App-header'>
+            <img src={logo} className='App-logo' alt='logo' />
             <h2>Docker Hive</h2>
           </div>
           {this.getContainers()}
-          <select ref="selectedImage">
+          <select ref='selectedImage'>
             <option>library/redis</option>
             <option>library/nginx</option>
           </select>
