@@ -5,27 +5,23 @@ import Spinner from './Spinner'
 class Container extends Component {
   constructor () {
     super()
-    this.kill = this.kill.bind(this)
-  }
-  kill (id) {
-    const ws = new WebSocket('ws://localhost:8000')
-    ws.onopen = () => {
-      ws.send(JSON.stringify({type: 'kill', data: {id: this.props.container.Id}}))
+    this.state = {
+      killing: false
     }
   }
+
   render () {
-    if (this.props.killResponse) {
-      if (this.props.killResponse.pending) {
-        return <Spinner />
-      } else if (this.props.killResponse.fulfilled) {
-        return null
-      }
+    if (this.state.killing) {
+      return <Spinner />
     }
 
     return (
       <div className="Container">
         {this.props.container.Id.slice(0, 5)}
-        <button style={{marginLeft: '5px'}} onClick={this.kill}>X</button>
+        <button style={{marginLeft: '5px'}} onClick={() => {
+          this.setState({killing: true})
+          this.props.kill(this.props.container.Id)
+        }}>X</button>
       </div>
     )
   }

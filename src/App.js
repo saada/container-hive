@@ -40,6 +40,10 @@ class App extends Component {
     this.setState({runStatus: true})
   }
 
+  killContainer (id) {
+    this.sendMessage('kill', {id})
+  }
+
   getSelectedImage () {
     return this.refs.selectedImage.value
   }
@@ -48,7 +52,7 @@ class App extends Component {
     if (this.state.runStatus) {
       return <p>Pulling and creating new {this.getSelectedImage()} container...</p>
     } else {
-      return <p></p>
+      return null
     }
   }
 
@@ -93,7 +97,7 @@ class App extends Component {
             <img src={logo} className='App-logo' alt='logo' />
             <h2>Docker Hive</h2>
           </div>
-          <ContainerList containers={this.state.containers} />
+          <ContainerList containers={this.state.containers} kill={this.killContainer.bind(this)} />
           <select ref='selectedImage'>
             <option>library/redis</option>
             <option>library/nginx</option>
