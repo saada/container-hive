@@ -1,6 +1,4 @@
-import React, { Component, PropTypes } from 'react'
-import { connect, PromiseState } from 'react-refetch'
-import Websocket from 'react-websocket'
+import React, { Component } from 'react'
 import logo from './logo.svg'
 import './App.css'
 import ContainerList from './ContainerList'
@@ -10,34 +8,36 @@ import Spinner from './Spinner'
 class App extends Component {
   constructor () {
     super()
-    this.getContainers = this.getContainers.bind(this)
     this.getSelectedImage = this.getSelectedImage.bind(this)
     this.runContainer = this.runContainer.bind(this)
     this.state = {
-      err: null
+      err: null,
+      ws: new WebSocket('ws://localhost:8000'),
+      containers: [],
+      runStatus: false
+    }
+  }
+
+  componentDidMount () {
+    const { ws } = this.state
+    ws.onmessage = event => {
+      this.handleMessage(event.data)
+    }
+    ws.onclose = () => {
+      console.log('Websocket disconnected')
     }
   }
 
   componentWillReceiveProps (nextProps) {
-    nextProps.psFetch.catch(err => {
-      console.log(err)
-      this.setState({err: 'Server is down! Make sure Docker is running and try starting the server with `npm run start-server`.'})
-    })
+    // nextProps.psFetch.catch(err => {
+    //   console.log(err)
+    //   this.setState({err: 'Server is down! Make sure Docker is running and try starting the server with `npm run start-server`.'})
+    // })
   }
 
   runContainer (image) {
-    this.props.runFetch(this.getSelectedImage())
-  }
-
-  getContainers () {
-    const fetch = this.props.psFetch
-    if (fetch.pending) {
-      return <Spinner width={100} />
-    } else if (fetch.rejected) {
-      return <p>Error: {fetch.reason}</p>
-    } else if (fetch.fulfilled) {
-      return <ContainerList containers={fetch.value} />
-    }
+    this.sendMessage('run', {image: this.getSelectedImage()})
+    this.setState({runStatus: true})
   }
 
   getSelectedImage () {
@@ -45,34 +45,28 @@ class App extends Component {
   }
 
   getStatus () {
-    if (this.props.runFetchResponse) {
-      const fetch = this.props.runFetchResponse
-      if (fetch.pending) {
-        return <p>Pulling and creating new {this.getSelectedImage()} container...</p>
-      } else if (fetch.rejected) {
-        return <p>Error: {fetch.reason}</p>
-      } else if (fetch.fulfilled) {
-        return <p>{fetch.value.message} - redis container created!</p>
-      }
+    if (this.state.runStatus) {
+      return <p>Pulling and creating new {this.getSelectedImage()} container...</p>
+    } else {
+      return <p></p>
     }
   }
 
-  getElements () {
-    if (!this.props.psFetch.value) {
-      return null
+  handleMessage (message) {
+    console.log('ws message - ', message)
+    const parsedMessage = JSON.parse(message)
+    switch (parsedMessage.type) {
+      case 'ps':
+        this.setState({runStatus: false, containers: parsedMessage.data})
+        break
+      default:
+        break
     }
-
-    return this.props.psFetch.value.map(container => {
-      return {
-        data: {
-          id: container.Id.slice(0, 5)
-        }
-      }
-    })
   }
 
-  handleData (data) {
-    console.log('ws data - ', data)
+  sendMessage (type, data) {
+    console.log('ws send - ', type, data)
+    this.state.ws.send(JSON.stringify({type, data}))
   }
 
   renderError () {
@@ -94,13 +88,12 @@ class App extends Component {
 
     return (
       <div>
-        <Websocket url='ws://localhost:8000/' onMessage={this.handleData.bind(this)} />
         <div className='App'>
           <div className='App-header'>
             <img src={logo} className='App-logo' alt='logo' />
             <h2>Docker Hive</h2>
           </div>
-          {this.getContainers()}
+          <ContainerList containers={this.state.containers} />
           <select ref='selectedImage'>
             <option>library/redis</option>
             <option>library/nginx</option>
@@ -126,26 +119,4 @@ class App extends Component {
   }
 }
 
-App.propTypes = {
-  psFetch: PropTypes.object,
-  runFetch: PropTypes.func,
-  runFetchResponse: PropTypes.instanceOf(PromiseState)
-}
-
-const URL_PS = 'http://localhost:8000/ps'
-const URL_RUN = 'http://localhost:8000/run'
-
-export default connect(props => ({
-  psFetch: {url: URL_PS, refreshInterval: 5000},
-  runFetch: (image) => ({
-    runFetchResponse: {
-      url: URL_RUN,
-      method: 'POST',
-      body: JSON.stringify({ image }),
-      force: true,
-      andThen: () => ({
-        psFetch: {url: URL_PS, refreshing: true, force: true, refreshInterval: 5000}
-      })
-    }
-  })
-}))(App)
+export default App
