@@ -1,6 +1,14 @@
-# Docker GUI
+# Docker Hive
 
 ![Screenshot](public/images/squares.gif)
+
+## Try it out on Mac
+```bash
+# https://github.com/fdebonneval/mobydig
+npm run start-server
+npm run start
+# should open a browser with the UI loaded
+```
 
 ## Why? 
 Visualization helps provides intuition and understanding. This project tries to answer the question
@@ -9,6 +17,7 @@ Visualization helps provides intuition and understanding. This project tries to 
 
 ## What? 
 Docker GUI's main goal is to give a user friendly display of everything that is running in your Docker daemon and, in the future, provide powerful CRUD capabilities. 
+
 ## How?
 Docker GUI is a Node app built with React, Refetch, Dockerode, and a basic Express server.
 

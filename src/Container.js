@@ -10,13 +10,29 @@ class Container extends Component {
     }
   }
 
+  getHighlightClass () {
+    if (!this.props.networkRequest) return ''
+    const networks = this.props.container.NetworkSettings.Networks
+    const networkKeys = Object.keys(networks)
+    for (let i = 0; i < networkKeys.length; i++) {
+      const network = networks[networkKeys[i]]
+      if (network.IPAddress === this.props.networkRequest.from) {
+        return 'sender'
+      }
+      if (network.IPAddress === this.props.networkRequest.to) {
+        return 'receiver'
+      }
+    }
+    return ''
+  }
+
   render () {
     if (this.state.killing) {
       return <Spinner />
     }
 
     return (
-      <div className="Container">
+      <div className={'Container ' + this.getHighlightClass()}>
         {this.props.container.Id.slice(0, 5)}
         <button style={{marginLeft: '5px'}} onClick={() => {
           this.setState({killing: true})

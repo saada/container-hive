@@ -4,7 +4,7 @@ import Container from './Container'
 
 class ContainerGroup extends Component {
   getContainers () {
-    return this.props.containers.map(container => <Container key={Math.random()} container={container} kill={this.props.kill}/>)
+    return this.props.containers.map(container => <Container key={Math.random()} container={container} {...this.props} />)
   }
 
   render () {
