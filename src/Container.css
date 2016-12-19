@@ -4,3 +4,11 @@
   padding: 2px;
   border-radius: 3px;
 }
+
+.Container.sender {
+  border: red solid 1px;
+}
+
+.Container.receiver {
+  border: green solid 1px;
+}

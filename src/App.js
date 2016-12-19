@@ -14,6 +14,7 @@ class App extends Component {
       err: null,
       ws: new WebSocket('ws://localhost:8000'),
       containers: [],
+      networkRequest: null,
       runStatus: false
     }
   }
@@ -63,6 +64,11 @@ class App extends Component {
       case 'ps':
         this.setState({runStatus: false, containers: parsedMessage.data})
         break
+      case 'networkRequest':
+        this.setState({networkRequest: parsedMessage.data}, () => {
+          setTimeout(() => this.setState({networkRequest: null}), 500)
+        })
+        break
       default:
         break
     }
@@ -97,7 +103,7 @@ class App extends Component {
             <img src={logo} className='App-logo' alt='logo' />
             <h2>Docker Hive</h2>
           </div>
-          <ContainerList containers={this.state.containers} kill={this.killContainer.bind(this)} />
+          <ContainerList containers={this.state.containers} kill={this.killContainer.bind(this)} networkRequest={this.state.networkRequest} />
           <select ref='selectedImage'>
             <option>library/redis</option>
             <option>library/nginx</option>
