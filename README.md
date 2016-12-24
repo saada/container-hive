@@ -22,7 +22,7 @@ Docker GUI is a Node app built with React, µWS, execa, Dockerode, and Express.
 
 #### Docker for Mac
 
-Follow the [mobydig guide](https://github.com/fdebonneval/mobydig) to compile sysdig for Docker for Mac. This app takes care of spinning up the container for you.
+Follow the [mobydig guide](https://github.com/fdebonneval/mobydig) to compile sysdig for Docker for Mac. This app takes care of spinning up the container for you. You follow the official sysdig issue [here](https://github.com/draios/sysdig/issues/637)
 
 #### Other platforms
 
