@@ -3,7 +3,8 @@ import logo from './logo.svg'
 import './App.css'
 import ContainerList from './ContainerList'
 import Hive from './Hive'
-import Spinner from './Spinner'
+import HexGrid from './HexGrid'
+import WebSocket from 'reconnecting-websocket'
 
 class App extends Component {
   constructor () {
@@ -21,11 +22,19 @@ class App extends Component {
 
   componentDidMount () {
     const { ws } = this.state
+    ws.addEventListener('open', () => {
+      console.info('Websocket connected')
+    })
+    ws.onerror = (err) => {
+      if (err.code === 'EHOSTDOWN') {
+        console.info('server down')
+      }
+    }
     ws.onmessage = event => {
       this.handleMessage(event.data)
     }
     ws.onclose = () => {
-      console.log('Websocket disconnected')
+      console.info('Websocket disconnected')
     }
   }
 
@@ -58,7 +67,7 @@ class App extends Component {
   }
 
   handleMessage (message) {
-    console.log('ws message - ', message)
+    // console.log('ws message - ', message)
     const parsedMessage = JSON.parse(message)
     switch (parsedMessage.type) {
       case 'ps':
@@ -103,6 +112,7 @@ class App extends Component {
             <img src={logo} className='App-logo' alt='logo' />
             <h2>Docker Hive</h2>
           </div>
+          {/*
           <ContainerList containers={this.state.containers} kill={this.killContainer.bind(this)} networkRequest={this.state.networkRequest} />
           <select ref='selectedImage'>
             <option>library/redis</option>
@@ -110,7 +120,10 @@ class App extends Component {
           </select>
           <button onClick={this.runContainer}>Add Container</button>
           {this.getStatus()}
+          */}
         </div>
+        <HexGrid containers={this.state.containers} networkRequest={this.state.networkRequest} />
+        {/*
         <Hive containers={
           [
             {Id: 1, Image: 'apple'},
@@ -124,6 +137,7 @@ class App extends Component {
             {Id: 9, Image: 'queen'}
           ]
         } />
+        */}
       </div>
     )
   }

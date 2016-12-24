@@ -7,8 +7,10 @@
 
 .Container.sender {
   border: red solid 1px;
+  background-color: lightgreen;
 }
 
 .Container.receiver {
-  border: green solid 1px;
+  border: black solid 1px;
+  background-color: lightcoral;  
 }
