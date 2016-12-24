@@ -2,24 +2,41 @@
 
 ![Screenshot](public/images/squares.gif)
 
-## Try it out on Mac
-```bash
-# https://github.com/fdebonneval/mobydig
-npm run start-server
-npm run start
-# should open a browser with the UI loaded
-```
+## Why
 
-## Why? 
 Visualization helps provides intuition and understanding. This project tries to answer the question
 
     What am I running on my environment?
 
-## What? 
+## What
+
 Docker GUI's main goal is to give a user friendly display of everything that is running in your Docker daemon and, in the future, provide powerful CRUD capabilities. 
 
-## How?
-Docker GUI is a Node app built with React, Refetch, Dockerode, and a basic Express server.
+## How
+
+Docker GUI is a Node app built with React, µWS, execa, Dockerode, and Express.
+
+## Try it out!
+
+### Setup Sysdig on your platform
+
+#### Docker for Mac
+
+Follow the [mobydig guide](https://github.com/fdebonneval/mobydig) to compile sysdig for Docker for Mac. This app takes care of spinning up the container for you.
+
+#### Other platforms
+
+Coming really soon!
+
+### Setup backend and frontend
+
+```bash
+npm install
+npm run start-server
+npm run start
+```
+
+Your browser should open a new tab with the app loaded on http://localhost:8000
 
 ## UI Concept
 
