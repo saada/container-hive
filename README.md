@@ -1,4 +1,4 @@
-# Docker Hive
+# Container Hive
 
 ![Screenshot](public/images/squares.gif)
 
@@ -10,13 +10,13 @@ Visualization helps provides intuition and understanding. This project tries to 
 
 ## What
 
-Docker GUI's main goal is to give a user friendly display of everything that is running in your Docker daemon and, in the future, provide powerful CRUD capabilities. 
+Container Hive's main goal is to give a user friendly display of everything that is running in your Docker daemon and, in the future, provide powerful CRUD capabilities. 
 
 ## How
 
-Docker GUI is a Node app built with React, µWS, execa, Dockerode, and Express.
+Container Hive is a Node app built with React, µWS, execa, Dockerode, and Express.
 
-## Try it out!
+## Try it out
 
 ### Setup Sysdig on your platform
 
