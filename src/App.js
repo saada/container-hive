@@ -110,7 +110,7 @@ class App extends Component {
         <div className='App'>
           <div className='App-header'>
             <img src={logo} className='App-logo' alt='logo' />
-            <h2>Docker Hive</h2>
+            <h2>Container Hive</h2>
           </div>
           {/*
           <ContainerList containers={this.state.containers} kill={this.killContainer.bind(this)} networkRequest={this.state.networkRequest} />
