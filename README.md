@@ -46,10 +46,7 @@ Your browser should open a new tab with the app loaded on http://localhost:8000
 
 ![Screenshot](public/images/ScreenShot2016-08-13-10.53.33AM.png)
 
-
-## Known Issues
-
-* Running containers in detached mode is not possible unless the container has an entrypoint
+![Screenshot](public/images/network_request.gif)
 
 ## Contibuting
 
@@ -62,3 +59,7 @@ npm run start-server
 ```
 
 Pull Requests are welcomed and encouraged!
+
+## Known Issues
+
+* Running containers in detached mode is not possible unless the container has an entrypoint
