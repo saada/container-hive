@@ -3,11 +3,11 @@ import './Cell.css'
 
 class Cell extends Component {
   render () {
-    return <div className="Cell">
+    return <div className='Cell'>
       <div className={`hex ${this.props.isPlaceholder ? 'placeholder' : ''}`}>&#x2B22;</div>
-      <div className="cell-content">
-        <div className="cell-name">{this.props.name}</div>
-        <div className="cell-count">{this.props.count}</div>
+      <div className='cell-content'>
+        <div className='cell-name'>{this.props.name}</div>
+        <div className='cell-count'>{this.props.count}</div>
       </div>
     </div>
   }
