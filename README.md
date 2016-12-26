@@ -20,13 +20,50 @@ Container Hive is a Node app built with React, µWS, execa, Dockerode, and Expre
 
 ### Setup Sysdig on your platform
 
-#### Docker for Mac
+#### Ubuntu/Debian
 
-Follow the [mobydig guide](https://github.com/fdebonneval/mobydig) to compile sysdig for Docker for Mac. This app takes care of spinning up the container for you. You follow the official sysdig issue [here](https://github.com/draios/sysdig/issues/637)
+```bash
+apt-get -y install linux-headers-$(uname -r)
+docker pull sysdig/sysdig
+```
+
+#### Centos/RHEL
+
+```bash
+yum -y install kernel-devel-$(uname -r)
+docker pull sysdig/sysdig
+```
+
+#### CoreOS
+
+```bash
+docker pull sysdig/sysdig
+```
+
+#### Docker-Machine on Mac
+
+Setup the VM first
+
+```bash
+docker-machine create --driver=virtualbox default
+eval $(docker-machine env)
+```
+
+#### Docker for Mac (currently buggy and unreliable)
+
+Follow the [latest mobydig guide](https://github.com/fdebonneval/mobydig) to compile sysdig for Docker for Mac. You can follow the official sysdig issue [here](https://github.com/draios/sysdig/issues/637)
+
+```bash
+git clone https://github.com/fdebonneval/mobydig
+cd mobydig
+make build
+# you'll need to make sure to run this container before running `npm run start-server` which will match the container name and listen to its logs
+docker run -t --name sysdig_container_hive -d --rm --privileged -v /var/run/docker.sock:/host/var/run/docker.sock -v /dev:/host/dev -v /proc:/host/proc:ro -v /lib/modules:/host/lib/modules:ro -v /usr:/host/usr:ro -v /usr/bin/docker:/usr/bin/docker:ro mobydig:dev sysdig -pc evt.type=accept
+```
 
 #### Other platforms
 
-Coming really soon!
+Submit issues and PRs please
 
 ### Setup backend and frontend
 
@@ -48,6 +85,8 @@ Your browser should open a new tab with the app loaded on http://localhost:8000
 
 ![Screenshot](public/images/network_request.gif)
 
+![Screenshot](public/images/network_request2.gif)
+
 ## Contibuting
 
 ```bash
@@ -59,7 +98,3 @@ npm run start-server
 ```
 
 Pull Requests are welcomed and encouraged!
-
-## Known Issues
-
-* Running containers in detached mode is not possible unless the container has an entrypoint

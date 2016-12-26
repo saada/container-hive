@@ -29,7 +29,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "start-server": "nodemon lib/index.js --exec babel-node --presets es2015,stage-2",
+    "start-server": "nodemon lib/index.js --watch lib --exec babel-node --presets es2015,stage-2",
     "build-server": "babel lib -d dist --presets es2015,stage-2",
     "serve-server": "node dist/index.js",
     "build": "react-scripts build",

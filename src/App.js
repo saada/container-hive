@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import logo from './logo.svg'
 import './App.css'
-import ContainerList from './ContainerList'
-import Hive from './Hive'
+// import ContainerList from './ContainerList'
 import HexGrid from './HexGrid'
 import WebSocket from 'reconnecting-websocket'
+import _ from 'lodash'
 
 class App extends Component {
   constructor () {
@@ -15,7 +15,7 @@ class App extends Component {
       err: null,
       ws: new WebSocket('ws://localhost:8000'),
       containers: [],
-      networkRequest: null,
+      networkRequests: [],
       runStatus: false
     }
   }
@@ -24,6 +24,7 @@ class App extends Component {
     const { ws } = this.state
     ws.addEventListener('open', () => {
       console.info('Websocket connected')
+      this.setState({err: null})
     })
     ws.onerror = (err) => {
       if (err.code === 'EHOSTDOWN') {
@@ -35,6 +36,7 @@ class App extends Component {
     }
     ws.onclose = () => {
       console.info('Websocket disconnected')
+      this.setState({err: 'Could not connect to server'})
     }
   }
 
@@ -66,6 +68,19 @@ class App extends Component {
     }
   }
 
+  getContainerIdsOfNetworkRequest (networkRequest) {
+    return this.state.containers.reduce((acc, container) => {
+      _.forIn(container.NetworkSettings.Networks, network => {
+        if (network.IPAddress === networkRequest.from) {
+          acc.from = container.Id
+        } else if (network.IPAddress === networkRequest.to) {
+          acc.to = container.Id
+        }
+      })
+      return acc
+    }, {from: null, to: null})
+  }
+
   handleMessage (message) {
     // console.log('ws message - ', message)
     const parsedMessage = JSON.parse(message)
@@ -74,9 +89,12 @@ class App extends Component {
         this.setState({runStatus: false, containers: parsedMessage.data})
         break
       case 'networkRequest':
-        this.setState({networkRequest: parsedMessage.data}, () => {
-          setTimeout(() => this.setState({networkRequest: null}), 500)
-        })
+        const containerIds = this.getContainerIdsOfNetworkRequest(parsedMessage.data)
+        if (containerIds.from && containerIds.to) {
+          const id = `net${Date.now()}`
+          // console.log('add network request', id)
+          this.setState({networkRequests: [...this.state.networkRequests, {id, request: {...containerIds}}]})
+        }
         break
       default:
         break
@@ -88,23 +106,16 @@ class App extends Component {
     this.state.ws.send(JSON.stringify({type, data}))
   }
 
-  renderError () {
-    return (
-      <div className='App'>
-        <div className='App-header'>
-          <img src={logo} className='App-logo' alt='logo' />
-          <h2>Docker GUI</h2>
-        </div>
-        <h2 style={{color: 'red'}}>{this.state.err}</h2>
-      </div>
-    )
+  removeNetworkRequest (id) {
+    // console.log('rem network request', id)
+    const indexToRemove = _.findIndex(this.state.networkRequests, {id})
+    this.setState({networkRequests: [
+      ...this.state.networkRequests.slice(0, indexToRemove),
+      ...this.state.networkRequests.slice(indexToRemove + 1)
+    ]})
   }
 
   render () {
-    if (this.state.err) {
-      return this.renderError()
-    }
-
     return (
       <div>
         <div className='App'>
@@ -112,6 +123,7 @@ class App extends Component {
             <img src={logo} className='App-logo' alt='logo' />
             <h2>Container Hive</h2>
           </div>
+          <h2 style={{color: 'red'}}>{this.state.err}</h2>
           {/*
           <ContainerList containers={this.state.containers} kill={this.killContainer.bind(this)} networkRequest={this.state.networkRequest} />
           <select ref='selectedImage'>
@@ -122,7 +134,7 @@ class App extends Component {
           {this.getStatus()}
           */}
         </div>
-        <HexGrid containers={this.state.containers} networkRequest={this.state.networkRequest} />
+        <HexGrid containers={this.state.containers} networkRequests={this.state.networkRequests} removeNetworkRequest={this.removeNetworkRequest.bind(this)}/>
         {/*
         <Hive containers={
           [
