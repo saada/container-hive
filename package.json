@@ -1,6 +1,6 @@
 {
   "name": "docker-hive",
-  "version": "0.0.1",
+  "version": "0.2.0",
   "private": true,
   "devDependencies": {
     "babel-cli": "^6.11.4",
