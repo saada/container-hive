@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import { Motion, spring } from 'react-motion'
 import { range } from 'lodash'
+import Particle from './Particle'
 import './HexGrid.css'
 
 const springSetting1 = {stiffness: 180, damping: 10}
@@ -107,19 +108,41 @@ export default class HexGrid extends Component {
   }
 
   getHighlightClass (container) {
-    if (!this.props.networkRequest) return ''
-    const networks = container.NetworkSettings.Networks
-    const networkKeys = Object.keys(networks)
-    for (let i = 0; i < networkKeys.length; i++) {
-      const network = networks[networkKeys[i]]
-      if (network.IPAddress === this.props.networkRequest.from) {
+    const { networkRequests } = this.props
+    if (!networkRequests.length) return ''
+    for (let j = 0; j < networkRequests.length; j++) {
+      if (container.Id === networkRequests[j].request.from) {
         return 'sender'
       }
-      if (network.IPAddress === this.props.networkRequest.to) {
+      if (container.Id === networkRequests[j].request.to) {
         return 'receiver'
       }
     }
+
     return ''
+  }
+
+  getSenderAndReceiverCoordinates (networkRequest) {
+    return this.state.order.reduce((acc, order, index) => {
+      const container = this.props.containers[index]
+      if (container.Id === networkRequest.from) {
+        acc.sender = this.state.layout[order]
+      } else if (container.Id === networkRequest.to) {
+        acc.receiver = this.state.layout[order]
+      }
+      return acc
+    }, {sender: null, receiver: null})
+  }
+
+  getParticles () {
+    return this.props.networkRequests.map(networkRequest => {
+      const {sender, receiver} = this.getSenderAndReceiverCoordinates(networkRequest.request)
+      if (!sender || !receiver) {
+        this.props.removeNetworkRequest(networkRequest.id)
+        return null
+      }
+      return <Particle removeNetworkRequest={() => this.props.removeNetworkRequest(networkRequest.id)} x1={sender[0]} y1={sender[1]} x2={receiver[0]} y2={receiver[1]} width={this.state.width} height={this.state.height} />
+    })
   }
 
   render () {
@@ -127,6 +150,7 @@ export default class HexGrid extends Component {
     return (
       <div className='HexGridContainer'>
         <div className='HexGrid'>
+          {this.getParticles()}
           {order.map((_, key) => {
             let style
             let x
@@ -150,6 +174,7 @@ export default class HexGrid extends Component {
               }
             }
             const container = this.props.containers[key]
+            const networkSide = this.getHighlightClass(container)
             return (
               <Motion key={key} style={style}>
                 {({translateX, translateY, scale, boxShadow}) =>
@@ -157,7 +182,7 @@ export default class HexGrid extends Component {
                     title={JSON.stringify(container, null, 2)}
                     onMouseDown={this.handleMouseDown.bind(this, key, [x, y])}
                     onTouchStart={this.handleTouchStart.bind(this, key, [x, y])}
-                    className={'HexCell ' + this.getHighlightClass(container)}
+                    className={'HexCell ' + networkSide}
                     style={{
                       backgroundColor: allColors[key % allColors.length],
                       WebkitTransform: `translate3d(${translateX}px, ${translateY}px, 0) scale(${scale})`,
@@ -169,8 +194,8 @@ export default class HexGrid extends Component {
                     {container.Image}
                   </div>}
               </Motion>
-          )
-        })}
+            )
+          })}
         </div>
       </div>
     )
