@@ -11,19 +11,20 @@ class Container extends Component {
   }
 
   getHighlightClass () {
-    if (!this.props.networkRequest) return ''
-    const networks = this.props.container.NetworkSettings.Networks
-    const networkKeys = Object.keys(networks)
-    for (let i = 0; i < networkKeys.length; i++) {
-      const network = networks[networkKeys[i]]
-      if (network.IPAddress === this.props.networkRequest.from) {
-        return 'sender'
+    let highlightClass = ''
+    if (!this.props.networkRequests) return ''
+    this.props.networkRequests.forEach(networkRequest => {
+      if (this.props.container.Id === networkRequest.request.from) {
+        setTimeout(() => this.props.removeNetworkRequest(networkRequest.id), 400)
+        highlightClass = 'sender'
       }
-      if (network.IPAddress === this.props.networkRequest.to) {
-        return 'receiver'
+      if (this.props.container.Id === networkRequest.request.to) {
+        setTimeout(() => this.props.removeNetworkRequest(networkRequest.id), 400)        
+        highlightClass = 'receiver'
       }
-    }
-    return ''
+    })
+
+    return highlightClass
   }
 
   render () {

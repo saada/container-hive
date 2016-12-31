@@ -15,14 +15,14 @@ class ContainerList extends Component {
     let output
     if (Object.keys(containerGroups).length) {
       output = Object.keys(containerGroups).map(name => {
-        return <ContainerGroup key={Math.random()} name={name} count={containerGroups[name].length} containers={containerGroups[name]} kill={this.props.kill} networkRequest={this.props.networkRequest} />
+        return <ContainerGroup key={Math.random()} name={name} count={containerGroups[name].length} containers={containerGroups[name]} kill={this.props.kill} networkRequests={this.props.networkRequests} removeNetworkRequest={this.props.removeNetworkRequest} />
       })
     } else {
       output = <h1>There are no running containers...</h1>
     }
 
     return (
-      <div className="ContainerList">
+      <div className='ContainerList'>
         {output}
       </div>
     )

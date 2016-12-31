@@ -18,6 +18,14 @@
   font-size: large;
 }
 
+.HeaderButton {
+  width: 'auto';
+  border: 'none'; 
+  border-radius: '99px';
+  padding: '10px'; 
+  background-color: 'lightgreen';
+}
+
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }

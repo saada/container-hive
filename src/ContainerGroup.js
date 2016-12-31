@@ -10,7 +10,7 @@ class ContainerGroup extends Component {
   render () {
     return (
       <div>
-        <div className="ContainerGroup">
+        <div className='ContainerGroup'>
           {this.getContainers()}
         </div>
         {this.props.name} - {this.props.count}

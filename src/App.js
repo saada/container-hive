@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import logo from './logo.svg'
 import './App.css'
-// import ContainerList from './ContainerList'
+import ContainerList from './ContainerList'
 import HexGrid from './HexGrid'
 import WebSocket from 'reconnecting-websocket'
 import _ from 'lodash'
@@ -16,7 +16,8 @@ class App extends Component {
       ws: new WebSocket('ws://localhost:8000'),
       containers: [],
       networkRequests: [],
-      runStatus: false
+      runStatus: false,
+      mode: 1
     }
   }
 
@@ -38,13 +39,6 @@ class App extends Component {
       console.info('Websocket disconnected')
       this.setState({err: 'Could not connect to server'})
     }
-  }
-
-  componentWillReceiveProps (nextProps) {
-    // nextProps.psFetch.catch(err => {
-    //   console.log(err)
-    //   this.setState({err: 'Server is down! Make sure Docker is running and try starting the server with `npm run start-server`.'})
-    // })
   }
 
   runContainer (image) {
@@ -115,41 +109,42 @@ class App extends Component {
     ]})
   }
 
+  renderMode1 () {
+    return <div>
+      <ContainerList containers={this.state.containers} kill={this.killContainer.bind(this)} networkRequests={this.state.networkRequests} removeNetworkRequest={this.removeNetworkRequest.bind(this)} />
+      <select ref='selectedImage'>
+        <option>library/redis</option>
+        <option>library/nginx</option>
+      </select>
+      <button onClick={this.runContainer}>Add Container</button>
+      {this.getStatus()}
+    </div>
+  }
+
+  renderMode2 () {
+    return <HexGrid containers={this.state.containers} networkRequests={this.state.networkRequests} removeNetworkRequest={this.removeNetworkRequest.bind(this)} />
+  }
+
   render () {
+    const ModeButton = {width: 'auto', border: 'none', borderRadius: '99px', padding: '10px', backgroundColor: 'lightgreen', margin: '0 15px'}
+    const ActiveModeButton = {width: 'auto', border: 'solid', borderRadius: '99px', padding: '10px', backgroundColor: 'lightgreen', margin: '0 15px'}
     return (
       <div>
         <div className='App'>
           <div className='App-header'>
             <img src={logo} className='App-logo' alt='logo' />
             <h2>Container Hive</h2>
+            <button style={this.state.mode === 1 ? ActiveModeButton : ModeButton} onClick={() => this.setState({mode: 1})}>
+              Mode 1
+            </button>
+            <button style={this.state.mode === 2 ? ActiveModeButton : ModeButton} onClick={() => this.setState({mode: 2})}>
+              Mode 2
+            </button>
           </div>
           <h2 style={{color: 'red'}}>{this.state.err}</h2>
-          {/*
-          <ContainerList containers={this.state.containers} kill={this.killContainer.bind(this)} networkRequest={this.state.networkRequest} />
-          <select ref='selectedImage'>
-            <option>library/redis</option>
-            <option>library/nginx</option>
-          </select>
-          <button onClick={this.runContainer}>Add Container</button>
-          {this.getStatus()}
-          */}
+          {this.state.mode === 1 ? this.renderMode1() : null}
+          {this.state.mode === 2 ? this.renderMode2() : null}
         </div>
-        <HexGrid containers={this.state.containers} networkRequests={this.state.networkRequests} removeNetworkRequest={this.removeNetworkRequest.bind(this)}/>
-        {/*
-        <Hive containers={
-          [
-            {Id: 1, Image: 'apple'},
-            {Id: 2, Image: 'orange'},
-            {Id: 3, Image: 'carrot'},
-            {Id: 4, Image: 'bee'},
-            {Id: 5, Image: 'bee'},
-            {Id: 6, Image: 'honey'},
-            {Id: 7, Image: 'honey'},
-            {Id: 8, Image: 'honey'},
-            {Id: 9, Image: 'queen'}
-          ]
-        } />
-        */}
       </div>
     )
   }
