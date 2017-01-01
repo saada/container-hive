@@ -87,6 +87,8 @@ Your browser should open a new tab with the app loaded on http://localhost:8000
 
 ![Screenshot](public/images/network_request2.gif)
 
+![Screenshot](public/images/colored-particles.gif)
+
 ## Contibuting
 
 ```bash
