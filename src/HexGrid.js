@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
-import { Motion, spring } from 'react-motion'
+import { TransitionMotion, Motion, spring } from 'react-motion'
 import { range } from 'lodash'
-import Particle from './Particle'
 import './HexGrid.css'
 
 const springSetting1 = {stiffness: 180, damping: 10}
@@ -118,31 +117,70 @@ export default class HexGrid extends Component {
         return 'receiver'
       }
     }
-
     return ''
   }
 
   getSenderAndReceiverCoordinates (networkRequest) {
     return this.state.order.reduce((acc, order, index) => {
-      const container = this.props.containers[index]
+      const container = this.props.containers[order]
       if (container.Id === networkRequest.from) {
-        acc.sender = this.state.layout[order]
+        acc.sender = this.state.layout[index]
       } else if (container.Id === networkRequest.to) {
-        acc.receiver = this.state.layout[order]
+        acc.receiver = this.state.layout[index]
       }
       return acc
     }, {sender: null, receiver: null})
   }
 
   getParticles () {
-    return this.props.networkRequests.map(networkRequest => {
+    const particles = this.props.networkRequests.map(networkRequest => {
       const {sender, receiver} = this.getSenderAndReceiverCoordinates(networkRequest.request)
-      if (!sender || !receiver) {
+      if (!sender || !receiver || this.state.isPressed) {
         this.props.removeNetworkRequest(networkRequest.id)
         return null
       }
-      return <Particle removeNetworkRequest={() => this.props.removeNetworkRequest(networkRequest.id)} x1={sender[0]} y1={sender[1]} x2={receiver[0]} y2={receiver[1]} width={this.state.width} height={this.state.height} />
+      return {key: networkRequest.id, x1: sender[0], y1: sender[1], x2: receiver[0], y2: receiver[1]}
     })
+    const borderWidth = 3
+    const particleSpring = {stiffness: 150, damping: 30}
+    return (
+      <TransitionMotion
+        willLeave={particle => {
+          return {
+            translateX: spring(particle.data.x2, particleSpring),
+            translateY: spring(particle.data.y2, particleSpring),
+            opacity: spring(1, particleSpring)
+          }
+        }}
+
+        styles={particles.map(particle => ({
+          key: particle.key,
+          data: particle,
+          style: {
+            translateX: particle.x1,
+            translateY: particle.y1,
+            opacity: 0.5
+          }
+        }))}>
+        {interpolatedStyles =>
+          <div>
+            {interpolatedStyles.map(({key, style: {translateX, translateY, opacity}}, index) => {
+              // console.log(translateX, translateY, opacity)
+              return <svg key={key} width='8' height='8' style={{
+                transform: `translate3d(${translateX}px, ${translateY}px, 0) scale(1)`,
+                marginTop: `${(50 / 2) - borderWidth / 2}px`,
+                marginLeft: `${(50 / 2) - borderWidth / 2}px`,
+                opacity: opacity,
+                position: 'absolute',
+                zIndex: 1000
+              }}>
+                <circle cx='4' cy='4' r='4' fill={allColors[index % allColors.length]} />
+              </svg>
+            })}
+          </div>
+        }
+      </TransitionMotion>
+    )
   }
 
   render () {
@@ -150,7 +188,6 @@ export default class HexGrid extends Component {
     return (
       <div className='HexGridContainer'>
         <div className='HexGrid'>
-          {this.getParticles()}
           {order.map((_, key) => {
             let style
             let x
@@ -196,6 +233,7 @@ export default class HexGrid extends Component {
               </Motion>
             )
           })}
+          {this.getParticles()}
         </div>
       </div>
     )

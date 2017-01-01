@@ -17,7 +17,7 @@ class App extends Component {
       containers: [],
       networkRequests: [],
       runStatus: false,
-      mode: 1
+      mode: 2
     }
   }
 
@@ -88,6 +88,7 @@ class App extends Component {
           const id = `net${Date.now()}`
           // console.log('add network request', id)
           this.setState({networkRequests: [...this.state.networkRequests, {id, request: {...containerIds}}]})
+          setTimeout(() => this.removeNetworkRequest(id), 400)
         }
         break
       default:
@@ -127,7 +128,7 @@ class App extends Component {
 
   render () {
     const ModeButton = {width: 'auto', border: 'none', borderRadius: '99px', padding: '10px', backgroundColor: 'lightgreen', margin: '0 15px'}
-    const ActiveModeButton = {width: 'auto', border: 'solid', borderRadius: '99px', padding: '10px', backgroundColor: 'lightgreen', margin: '0 15px'}
+    const ActiveModeButton = {...ModeButton, border: 'solid'}
     return (
       <div>
         <div className='App'>

@@ -12,6 +12,7 @@ class Particle extends Component {
     setTimeout(() => this.props.removeNetworkRequest(), 400)
   }
   render () {
+    console.log('perf')
     const {x1, y1, x2, y2} = this.props
     const borderWidth = 3
     // console.log(x1, y1, x2, y2, this.props.width / 2, this.props.height / 2)
@@ -28,16 +29,15 @@ class Particle extends Component {
         opacity: spring(1, particleSpring)
       }}>
       {({opacity, translateX, translateY}) => {
-        return <div style={{
-          WebkitTransform: `translate3d(${translateX}px, ${translateY}px, 0) scale(1)`,
+        return <svg width='8' height='8' style={{
           transform: `translate3d(${translateX}px, ${translateY}px, 0) scale(1)`,
-          zIndex: 1000,
-          border: `${borderWidth}px solid gold`,
-          borderRadius: '99px',
-          position: 'absolute',
           marginTop: `${(50 / 2) - borderWidth / 2}px`,
-          marginLeft: `${(50 / 2) - borderWidth / 2}px`
-        }} />
+          marginLeft: `${(50 / 2) - borderWidth / 2}px`,
+          position: 'absolute',
+          zIndex: 1000
+        }}>
+          <circle cx='4' cy='4' r='4' fill='yellow' />
+        </svg>
       }}
     </Motion>
   }
