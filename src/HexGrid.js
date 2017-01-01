@@ -212,6 +212,9 @@ export default class HexGrid extends Component {
             }
             const container = this.props.containers[key]
             const networkSide = this.getHighlightClass(container)
+            const splitColon = container.Image.split(':')[0]
+            const splitSlash = splitColon.split('/')
+            const name = splitSlash[splitSlash.length - 1]
             return (
               <Motion key={key} style={style}>
                 {({translateX, translateY, scale, boxShadow}) =>
@@ -228,7 +231,7 @@ export default class HexGrid extends Component {
                       boxShadow: `${boxShadow}px 5px 5px rgba(0,0,0,0.5)`
                     }}
                   >
-                    {container.Image}
+                    {name}
                   </div>}
               </Motion>
             )
