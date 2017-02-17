@@ -18,6 +18,7 @@ class App extends Component {
       networkRequests: [],
       runStatus: false,
       mode: 2,
+      focus: false,
       // spring configs
       stiffness: 150,
       damping: 30
@@ -36,9 +37,7 @@ class App extends Component {
       }
     }
     ws.onmessage = event => {
-      if (this.state.stiffness !== 0) {
-        this.handleMessage(event.data)
-      }
+      this.handleMessage(event.data)
     }
     ws.onclose = () => {
       console.info('Websocket disconnected')
@@ -47,6 +46,14 @@ class App extends Component {
 
     // add keyboard listeners
     window.document.addEventListener('keydown', e => this.maxPayneMode(e))
+
+    // disable system when tab is not focused
+    window.addEventListener('blur', e => {
+      this.setState({focus: false})
+    })
+    window.addEventListener('focus', e => {
+      this.setState({focus: true})
+    })
   }
 
   /**
@@ -116,6 +123,11 @@ class App extends Component {
         this.setState({runStatus: false, containers: parsedMessage.data})
         break
       case 'networkRequest':
+        // perf optimization: ignore network requests if in blur mode or animations are paused
+        if (this.state.stiffness === 0 || !this.state.focus) {
+          break
+        }
+
         const containerIds = this.getContainerIdsOfNetworkRequest(parsedMessage.data)
         if (containerIds.from && containerIds.to) {
           const id = `net${Date.now()}`
