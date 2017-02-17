@@ -17,7 +17,10 @@ class App extends Component {
       containers: [],
       networkRequests: [],
       runStatus: false,
-      mode: 2
+      mode: 2,
+      // spring configs
+      stiffness: 150,
+      damping: 30
     }
   }
 
@@ -33,11 +36,41 @@ class App extends Component {
       }
     }
     ws.onmessage = event => {
-      this.handleMessage(event.data)
+      if (this.state.stiffness !== 0) {
+        this.handleMessage(event.data)
+      }
     }
     ws.onclose = () => {
       console.info('Websocket disconnected')
       this.setState({err: 'Could not connect to server'})
+    }
+
+    // add keyboard listeners
+    window.document.addEventListener('keydown', e => this.maxPayneMode(e))
+  }
+
+  /**
+   * Control animation speed with keyboard controls
+   */
+  maxPayneMode (e) {
+    const { keyCode } = e
+    const { stiffness } = this.state
+    switch (keyCode) {
+      case 37: // left
+      case 40: // down
+        e.preventDefault()
+        const newStiffness = stiffness - 5
+        this.setState({stiffness: newStiffness})
+        break
+      case 38: // up
+      case 39: // right
+        e.preventDefault()
+        this.setState({stiffness: stiffness + 5})
+        break
+      case 32: // space
+        e.preventDefault()
+        this.setState({stiffness: stiffness === 0 ? 150 : 0})
+        break
     }
   }
 
@@ -123,7 +156,7 @@ class App extends Component {
   }
 
   renderMode2 () {
-    return <HexGrid containers={this.state.containers} networkRequests={this.state.networkRequests} removeNetworkRequest={this.removeNetworkRequest.bind(this)} />
+    return <HexGrid containers={this.state.containers} networkRequests={this.state.networkRequests} removeNetworkRequest={this.removeNetworkRequest.bind(this)} stiffness={this.state.stiffness} damping={this.state.damping} />
   }
 
   render () {

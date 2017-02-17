@@ -142,7 +142,7 @@ export default class HexGrid extends Component {
       return {key: networkRequest.id, x1: sender[0], y1: sender[1], x2: receiver[0], y2: receiver[1]}
     })
     const borderWidth = 3
-    const particleSpring = {stiffness: 150, damping: 30}
+    const particleSpring = {stiffness: this.props.stiffness, damping: this.props.damping}
     return (
       <TransitionMotion
         willLeave={particle => {

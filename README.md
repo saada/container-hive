@@ -100,3 +100,11 @@ npm run start-server
 ```
 
 Pull Requests are welcomed and encouraged!
+
+# Usage
+
+## Keyboard shortcuts
+
+* Up/Right arrow: Increase animation speed
+* Down/Left arrow: Decrease animation speed
+* Space: Toggle pause the world
