@@ -124,7 +124,7 @@ class App extends Component {
         break
       case 'networkRequest':
         // perf optimization: ignore network requests if in blur mode or animations are paused
-        if (this.state.stiffness === 0 || !this.state.focus) {
+        if (this.state.stiffness === 0) { // || !this.state.focus) {
           break
         }
 

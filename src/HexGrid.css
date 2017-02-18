@@ -10,22 +10,24 @@
   -webkit-align-items: center;
 }
 .HexGrid {
-  width: 190px;
-  height: 320px;
+  /*width: 190px;
+  height: 320px;*/
   text-align: left;
 }
 .HexCell {
-  word-wrap: break-word;
+  /*word-wrap: break-word;*/
   position: absolute;
-  border: 1px solid black;
-  border-radius: 3px;
-  width: 50px;
-  height: 50px;
-  font-size: 14px;
+  stroke: black;
+  stroke-width: 1;
+  /*border: 1px solid black;*/
+  /*border-radius: 3px;*/
+  /*width: 50px;*/
+  /*height: 50px;*/
+  /*font-size: 14px;*/
 }
 .HexCell.sender {
-  border: white solid 1px;
+  stroke: white;
 }
 .HexCell.receiver {
-  border: lightgreen solid 1px;
+  stroke: lightgreen;
 }

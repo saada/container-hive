@@ -3,6 +3,32 @@ import { TransitionMotion, Motion, spring } from 'react-motion'
 import { range } from 'lodash'
 import './HexGrid.css'
 
+// number of rows
+const R = 4
+/**
+ * hexagon height constant
+ *    /|\
+ *   / | \
+ *  /  |  \
+ * |   |   |
+ * |   H   |
+ * |   |   |
+ *  \  |  /
+ *   \ | /
+ *    \|/
+ */
+const H = 100
+const hexCoordinates = {
+  TOP: `${H / 2},0`,
+  TOP_RIGHT: `${H * 0.932},${H / 4}`,
+  BOTTOM_RIGHT: `${H * 0.932},${H / 1.33}`,
+  BOTTOM: `${H / 2},${H}`,
+  BOTTOM_LEFT: `${H * 0.068},${H / 1.33}`,
+  TOP_LEFT: `${H * 0.068},${H / 4}`
+}
+// const flatTopHexagon = '50,25 37.5,46.66 12.5,46.66 0,25 12.5,3.33 37.5,3.33'
+const pointyTopHexagon = `${hexCoordinates.TOP} ${hexCoordinates.TOP_RIGHT} ${hexCoordinates.BOTTOM_RIGHT} ${hexCoordinates.BOTTOM} ${hexCoordinates.BOTTOM_LEFT} ${hexCoordinates.TOP_LEFT}`
+
 const springSetting1 = {stiffness: 180, damping: 10}
 const springSetting2 = {stiffness: 120, damping: 17}
 function reinsert (arr, from, to) {
@@ -27,8 +53,8 @@ export default class HexGrid extends Component {
     super(props)
     this.state = {
       count: 0,
-      width: 70,
-      height: 90,
+      width: H - (H * 0.136),
+      height: H,
       layout: [],
       mouse: [0, 0],
       delta: [0, 0], // difference between mouse and circle pos, for dragging
@@ -44,8 +70,8 @@ export default class HexGrid extends Component {
       count,
       // indexed by visual position
       layout: range(count).map(n => {
-        const row = Math.floor(n / 3)
-        const col = n % 3
+        const row = Math.floor(n / R)
+        const col = n % R
         return [this.state.width * col, this.state.height * row]
       })
     }
@@ -66,10 +92,10 @@ export default class HexGrid extends Component {
   }
 
   componentDidMount () {
-    window.addEventListener('touchmove', this.handleTouchMove.bind(this))
-    window.addEventListener('touchend', this.handleMouseUp.bind(this))
-    window.addEventListener('mousemove', this.handleMouseMove.bind(this))
-    window.addEventListener('mouseup', this.handleMouseUp.bind(this))
+    window.addEventListener('touchmove', e => this.handleTouchMove(e))
+    window.addEventListener('touchend', e => this.handleMouseUp(e))
+    window.addEventListener('mousemove', e => this.handleMouseMove(e))
+    window.addEventListener('mouseup', e => this.handleMouseUp(e))
   }
 
   handleTouchStart (key, pressLocation, e) {
@@ -86,8 +112,8 @@ export default class HexGrid extends Component {
     if (isPressed) {
       const mouse = [pageX - dx, pageY - dy]
       const col = clamp(Math.floor(mouse[0] / this.state.width), 0, 2)
-      const row = clamp(Math.floor(mouse[1] / this.state.height), 0, Math.floor(this.state.count / 3))
-      const index = row * 3 + col
+      const row = clamp(Math.floor(mouse[1] / this.state.height), 0, Math.floor(this.state.count / R))
+      const index = row * R + col
       const newOrder = reinsert(order, order.indexOf(lastPress), index)
       this.setState({mouse: mouse, order: newOrder})
     }
@@ -168,8 +194,8 @@ export default class HexGrid extends Component {
               // console.log(translateX, translateY, opacity)
               return <svg key={key} width='8' height='8' style={{
                 transform: `translate3d(${translateX}px, ${translateY}px, 0) scale(1)`,
-                marginTop: `${(50 / 2) - borderWidth / 2}px`,
-                marginLeft: `${(50 / 2) - borderWidth / 2}px`,
+                marginTop: `${(H / 2) - borderWidth / 2}px`,
+                marginLeft: `${(H / 2) - borderWidth / 2}px`,
                 opacity: opacity,
                 position: 'absolute',
                 zIndex: 1000
@@ -187,7 +213,10 @@ export default class HexGrid extends Component {
     const {order, lastPress, isPressed, mouse} = this.state
     return (
       <div className='HexGridContainer'>
-        <div className='HexGrid'>
+        <div className='HexGrid' style={{
+          width: `${R * H}px`,
+          height: '320px'
+        }}>
           {order.map((_, key) => {
             let style
             let x
@@ -199,7 +228,7 @@ export default class HexGrid extends Component {
                 translateX: x,
                 translateY: y,
                 scale: spring(1.2, springSetting1),
-                boxShadow: spring((x - (3 * this.state.width - 50) / 2) / 15, springSetting1)
+                boxShadow: spring((x - (R * this.state.width - H) / 2) / 15, springSetting1)
               }
             } else {
               [x, y] = this.state.layout[visualPosition]
@@ -207,7 +236,7 @@ export default class HexGrid extends Component {
                 translateX: spring(x, springSetting2),
                 translateY: spring(y, springSetting2),
                 scale: spring(1, springSetting1),
-                boxShadow: spring((x - (3 * this.state.width - 50) / 2) / 15, springSetting1)
+                boxShadow: spring((x - (R * this.state.width - H) / 2) / 15, springSetting1)
               }
             }
             const container = this.props.containers[key]
@@ -218,21 +247,29 @@ export default class HexGrid extends Component {
             return (
               <Motion key={key} style={style}>
                 {({translateX, translateY, scale, boxShadow}) =>
-                  <div
+                  <svg width={H} height={H}
                     title={JSON.stringify(container, null, 2)}
                     onMouseDown={this.handleMouseDown.bind(this, key, [x, y])}
                     onTouchStart={this.handleTouchStart.bind(this, key, [x, y])}
-                    className={'HexCell ' + networkSide}
                     style={{
-                      backgroundColor: allColors[key % allColors.length],
-                      WebkitTransform: `translate3d(${translateX}px, ${translateY}px, 0) scale(${scale})`,
+                      padding: '1px',
+                      cursor: 'pointer',
+                      userSelect: 'none',
+                      color: 'white',
                       transform: `translate3d(${translateX}px, ${translateY}px, 0) scale(${scale})`,
                       zIndex: key === lastPress ? 99 : visualPosition,
-                      boxShadow: `${boxShadow}px 5px 5px rgba(0,0,0,0.5)`
+                      // boxShadow: `${boxShadow}px 5px 5px rgba(0,0,0,0.5)`
                     }}
+                    className={'HexCell ' + networkSide}
                   >
-                    {name}
-                  </div>}
+                    <polygon
+                      fill={allColors[key % allColors.length]}
+                      points={pointyTopHexagon}
+                    >
+                    </polygon>
+                    <text x={H / 2} y={H / 2} textAnchor='middle' alignmentBaseline='middle' stroke='none' fill='white'>{name}</text>
+                  </svg>
+                }
               </Motion>
             )
           })}
