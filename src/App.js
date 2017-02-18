@@ -177,6 +177,7 @@ class App extends Component {
     return (
       <div>
         <div className='App'>
+          <p style={{position: 'absolute', right: '10px'}}>Stiffness: {this.state.stiffness}</p>
           <div className='App-header'>
             <img src={logo} className='App-logo' alt='logo' />
             <h2>Container Hive</h2>
