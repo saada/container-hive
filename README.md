@@ -1,16 +1,33 @@
 # Container Hive
 
-![Screenshot](public/images/squares.gif)
+## Demos
+### [Intro Video](https://www.youtube.com/watch?v=DsBqEI_JHa0)
 
 ## Why
 
-Visualization helps provides intuition and understanding. This project tries to answer the question
+Visualization helps provides intuition and understanding. This project tries to answer the following questions
 
-    What am I running on my environment?
+    What's running on my Docker daemon?
+    What does my network path look like?
+    How is everything tied together?
 
 ## What
 
-Container Hive's main goal is to give a user friendly display of everything that is running in your Docker daemon and, in the future, provide powerful CRUD capabilities. 
+Container Hive's main goal is to give a user friendly display of everything that is running in your Docker daemon and, in the future, provide powerful CRUD capabilities.
+
+### Drag n Drop
+
+![Screenshot](public/images/hexgrid.gif)
+
+### Max Payne Mode
+
+![Screenshot](public/images/max-payne.gif)
+
+#### Keyboard shortcuts
+
+* Up/Right arrow: Increase animation speed
+* Down/Left arrow: Decrease animation speed
+* Space: Toggle pause the world
 
 ## How
 
@@ -75,20 +92,6 @@ npm run start
 
 Your browser should open a new tab with the app loaded on http://localhost:8000
 
-## UI Concept
-
-![Concept](public/images/ComponentConcept.png)
-
-## Screenshots (WIP)
-
-![Screenshot](public/images/ScreenShot2016-08-13-10.53.33AM.png)
-
-![Screenshot](public/images/network_request.gif)
-
-![Screenshot](public/images/network_request2.gif)
-
-![Screenshot](public/images/colored-particles.gif)
-
 ## Contibuting
 
 ```bash
@@ -101,10 +104,17 @@ npm run start-server
 
 Pull Requests are welcomed and encouraged!
 
-# Usage
+## UI Concept
 
-## Keyboard shortcuts
+![Concept](public/images/ComponentConcept.png)
 
-* Up/Right arrow: Increase animation speed
-* Down/Left arrow: Decrease animation speed
-* Space: Toggle pause the world
+## Screenshots of Milestones
+
+![Screenshot](public/images/ScreenShot2016-08-13-10.53.33AM.png)
+
+![Screenshot](public/images/network_request.gif)
+
+![Screenshot](public/images/network_request2.gif)
+
+![Screenshot](public/images/colored-particles.gif)
+
