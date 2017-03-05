@@ -18,7 +18,7 @@
   /*word-wrap: break-word;*/
   position: absolute;
   stroke: black;
-  stroke-width: 1;
+  stroke-width: 2;
   /*border: 1px solid black;*/
   /*border-radius: 3px;*/
   /*width: 50px;*/
@@ -27,7 +27,9 @@
 }
 .HexCell.sender {
   stroke: white;
+  stroke-width: 2;
 }
 .HexCell.receiver {
   stroke: lightgreen;
+  stroke-width: 2;
 }

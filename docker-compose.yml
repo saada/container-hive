@@ -2,9 +2,7 @@ version: '2'
 services:
   nginx:
     image: nginx:alpine
-    ports:
-      - "80:80"
 
   curl:
     image: appropriate/curl
-    command: sh -c 'while true; do curl nginx; sleep 1; done'
+    command: sh -c 'while true; do curl nginx; sleep 0.4; done'

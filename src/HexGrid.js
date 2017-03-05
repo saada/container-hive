@@ -3,8 +3,8 @@ import { TransitionMotion, Motion, spring } from 'react-motion'
 import { range } from 'lodash'
 import './HexGrid.css'
 
-// number of rows
-const R = 4
+// number of cols
+const C = 4
 /**
  * hexagon height constant
  *    /|\
@@ -18,6 +18,7 @@ const R = 4
  *    \|/
  */
 const H = 100
+
 const hexCoordinates = {
   TOP: `${H / 2},0`,
   TOP_RIGHT: `${H * 0.932},${H / 4}`,
@@ -53,8 +54,8 @@ export default class HexGrid extends Component {
     super(props)
     this.state = {
       count: 0,
-      width: H - (H * 0.136),
-      height: H,
+      width: H - (H * 0.136), // horizontal space between hexagons
+      height: H - (H * 0.136 * 1.80), // vertical space between hexagons
       layout: [],
       mouse: [0, 0],
       delta: [0, 0], // difference between mouse and circle pos, for dragging
@@ -70,9 +71,10 @@ export default class HexGrid extends Component {
       count,
       // indexed by visual position
       layout: range(count).map(n => {
-        const row = Math.floor(n / R)
-        const col = n % R
-        return [this.state.width * col, this.state.height * row]
+        const row = Math.floor(n / C)
+        const col = n % C
+        return row % 2 === 0 ? [this.state.width * col, this.state.height * row] : [(this.state.width * col) + (this.state.width / 2), this.state.height * row]
+        // return [this.state.width * col, this.state.height * row]
       })
     }
     // maintain order as much as possible
@@ -112,8 +114,8 @@ export default class HexGrid extends Component {
     if (isPressed) {
       const mouse = [pageX - dx, pageY - dy]
       const col = clamp(Math.floor(mouse[0] / this.state.width), 0, 2)
-      const row = clamp(Math.floor(mouse[1] / this.state.height), 0, Math.floor(this.state.count / R))
-      const index = row * R + col
+      const row = clamp(Math.floor(mouse[1] / this.state.height), 0, Math.floor(this.state.count / C))
+      const index = row * C + col
       const newOrder = reinsert(order, order.indexOf(lastPress), index)
       this.setState({mouse: mouse, order: newOrder})
     }
@@ -200,7 +202,10 @@ export default class HexGrid extends Component {
                 position: 'absolute',
                 zIndex: 1000
               }}>
-                <circle cx='4' cy='4' r='4' fill={allColors[index % allColors.length]} />
+                <circle cx='4' cy='4' r='4' fill={allColors[index % allColors.length]} style={{
+                  stroke: 'black',
+                  strokeWidth: 0.5
+                }} />
               </svg>
             })}
           </div>
@@ -214,7 +219,7 @@ export default class HexGrid extends Component {
     return (
       <div className='HexGridContainer'>
         <div className='HexGrid' style={{
-          width: `${R * H}px`,
+          width: `${C * H}px`,
           height: '320px'
         }}>
           {order.map((_, key) => {
@@ -228,7 +233,7 @@ export default class HexGrid extends Component {
                 translateX: x,
                 translateY: y,
                 scale: spring(1.2, springSetting1),
-                boxShadow: spring((x - (R * this.state.width - H) / 2) / 15, springSetting1)
+                boxShadow: spring((x - (C * this.state.width - H) / 2) / 15, springSetting1)
               }
             } else {
               [x, y] = this.state.layout[visualPosition]
@@ -236,7 +241,7 @@ export default class HexGrid extends Component {
                 translateX: spring(x, springSetting2),
                 translateY: spring(y, springSetting2),
                 scale: spring(1, springSetting1),
-                boxShadow: spring((x - (R * this.state.width - H) / 2) / 15, springSetting1)
+                boxShadow: spring((x - (C * this.state.width - H) / 2) / 15, springSetting1)
               }
             }
             const container = this.props.containers[key]
