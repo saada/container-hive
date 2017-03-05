@@ -15,13 +15,9 @@ Visualization helps provides intuition and understanding. This project tries to 
 
 Container Hive's main goal is to give a user friendly display of everything that is running in your Docker daemon and, in the future, provide powerful CRUD capabilities.
 
-### Drag n Drop
+### Drag n Drop and Max Payne Mode
 
-![Screenshot](public/images/hexgrid.gif)
-
-### Max Payne Mode
-
-![Screenshot](public/images/max-payne.gif)
+![Screenshot](public/images/container-hive-hex-grid.gif)
 
 #### Keyboard shortcuts
 
@@ -118,3 +114,10 @@ Pull Requests are welcomed and encouraged!
 
 ![Screenshot](public/images/colored-particles.gif)
 
+### Drag n Drop
+
+![Screenshot](public/images/hexgrid.gif)
+
+### Max Payne Mode
+
+![Screenshot](public/images/max-payne.gif)
